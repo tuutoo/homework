@@ -1,0 +1,8 @@
+#app {
+  background: #06283d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+}

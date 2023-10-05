@@ -1,0 +1,5 @@
+*.pyc
+lib
+*.zip
+myenv
+*.jpg
