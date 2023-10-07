@@ -3,8 +3,8 @@ import { ref } from "vue";
 import { NCard, NButton, NSpace } from "naive-ui";
 import axios from "axios";
 
-import 'vue-cropper/dist/index.css'
-import { VueCropper }  from "vue-cropper";
+import "vue-cropper/dist/index.css";
+import { VueCropper } from "vue-cropper";
 
 const apiUrl = import.meta.env.VITE_APP_API_URL || "http://192.168.66.32:8000/invert/";
 
@@ -12,9 +12,14 @@ const imgSrc = ref("");
 const imgReturn = ref("");
 const infoText = ref("");
 const fileInput = ref<HTMLInputElement | null>(null);
-const cropper = ref<{ getCropBlob: (callback: (data: Blob) => void) => void } | null>(
+
+const cropper_src = ref<{ getCropBlob: (callback: (data: Blob) => void) => void } | null>(
   null
 );
+
+const cropper_target = ref<{
+  getCropBlob: (callback: (data: Blob) => void) => void;
+} | null>(null);
 
 const clearPreviousResults = () => {
   imgSrc.value = "";
@@ -59,11 +64,19 @@ const fileChanged = (e: Event) => {
   fetchRequest(formData);
 };
 
+const downloadSrcImage = () => {
+  const aLink = document.createElement("a");
+  aLink.download = "原图像";
+  cropper_src.value?.getCropBlob((data: Blob) => {
+    aLink.href = window.URL.createObjectURL(data);
+    aLink.click();
+  });
+};
+
 const downloadImage = () => {
-  console.log("downloading");
   const aLink = document.createElement("a");
   aLink.download = "反色图像";
-  cropper.value?.getCropBlob((data: Blob) => {
+  cropper_target.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data);
     aLink.click();
   });
@@ -76,10 +89,19 @@ const downloadImage = () => {
       <n-space vertical>
         <n-space>
           <n-button @click="clickInputFile">上传文件</n-button>
+          <n-button v-if="imgSrc" @click="downloadSrcImage">下载裁切图(原图)</n-button>
         </n-space>
         <div>
           <input type="file" ref="fileInput" @change="fileChanged" hidden />
-          <img :src="imgSrc" alt="" class="scaled-img" />
+          <div class="img-src">
+            <VueCropper
+              ref="cropper_src"
+              :img="imgSrc"
+              autoCrop
+              centerBox
+              outputType="png"
+            ></VueCropper>
+          </div>
           <div class="content">
             <p>{{ infoText }}</p>
           </div>
@@ -89,14 +111,14 @@ const downloadImage = () => {
         <n-space vertical>
           <div class="crop-container">
             <VueCropper
-              ref="cropper"
+              ref="cropper_target"
               :img="imgReturn"
               autoCrop
               centerBox
               outputType="png"
             ></VueCropper>
           </div>
-          <n-button @click="downloadImage">下载裁切图</n-button>
+          <n-button v-if="imgReturn" @click="downloadImage">下载裁切图(反色)</n-button>
         </n-space>
       </div>
     </n-card>
@@ -112,13 +134,13 @@ const downloadImage = () => {
   width: 50%;
 }
 
-.scaled-img {
-  max-width: 100%;
-  height: auto;
-}
-
 .crop-container {
   width: 100%;
-  height: 600px;
+  height: 400px;
+}
+
+.img-src {
+  width: 100%;
+  height: 400px;
 }
 </style>
