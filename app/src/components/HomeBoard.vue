@@ -132,7 +132,7 @@ const downloadImage = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  width: 50%;
+  width: 100%;
 }
 
 .crop-container {
