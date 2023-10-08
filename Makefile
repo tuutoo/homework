@@ -1,2 +1,2 @@
 dev:
-	docker-compose -f ./docker/docker-compose.dev.yml up --remove-orphans
+	docker-compose -p homework -f ./docker/docker-compose.dev.yml up --remove-orphans
