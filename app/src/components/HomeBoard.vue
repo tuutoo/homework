@@ -6,7 +6,7 @@ import axios from "axios";
 import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
 
-const apiUrl = import.meta.env.VITE_APP_API_URL || "http://192.168.66.32:8000/invert/";
+const apiUrl = import.meta.env.VITE_APP_API_URL || "http://192.168.66.32:8000/api/invert/";
 
 const imgSrc = ref("");
 const imgReturn = ref("");
