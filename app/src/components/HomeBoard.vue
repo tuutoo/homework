@@ -41,6 +41,7 @@ const fetchRequest = async (formData: FormData) => {
       responseType: "arraybuffer",
       headers: {
         "Content-Type": "multipart/form-data",
+        "Access-Control-Allow-Origin": "*",
       },
     });
     const blob = new Blob([data], { type: "image/jpeg" });
