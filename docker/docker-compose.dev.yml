@@ -19,7 +19,7 @@ services:
       context: ../api
       dockerfile: Dockerfile
     volumes:
-      - ../api:/workspace/api
+      - ../api:/usr/src/app
     ports:
       - "8000:8000"
     environment:
