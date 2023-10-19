@@ -27,6 +27,12 @@ def read_item(item_id: int):
 
 @app.post("/invert/")
 async def invert_image(file: UploadFile = File(...)):
+    file_ext = file.filename.split(".")[-1]  # 获取文件扩展名
+    supported_formats = ["jpeg", "jpg", "png"]
+
+    if file_ext.lower() not in supported_formats:
+        return {"error": "Unsupported file format, only jpg and png are supportted."}
+
     # 使用 PIL 打开图片
     image = Image.open(io.BytesIO(await file.read()))
 
@@ -41,9 +47,9 @@ async def invert_image(file: UploadFile = File(...)):
 
     # 保存到一个字节流中，以便可以直接返回
     byte_io = io.BytesIO()
-    inverted_image.save(byte_io, 'JPEG')
+    inverted_image.save(byte_io, file_ext.upper())
     byte_io.seek(0)
 
-    return StreamingResponse(byte_io, media_type="image/jpeg", headers={"Content-Disposition": "attachment; filename=inverted_image.jpg"})
+    return StreamingResponse(byte_io, media_type=f"image/{file_ext}", headers={"Content-Disposition": f"attachment; filename=inverted_image.{file_ext}"})
 
 handler = Mangum(app)

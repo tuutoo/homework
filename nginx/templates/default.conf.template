@@ -8,5 +8,6 @@ server {
     location /api/ {
         rewrite ^/api(/.*)$ $1 break;
         proxy_pass http://homework-api:8000; # 假设后端API容器的名字是"homework-api"，并且服务运行在8000端口
+        client_max_body_size 50M;  # 设置最大请求体大小为 50M
     }
 }
