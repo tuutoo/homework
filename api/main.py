@@ -47,7 +47,12 @@ async def invert_image(file: UploadFile = File(...)):
 
     # 保存到一个字节流中，以便可以直接返回
     byte_io = io.BytesIO()
-    inverted_image.save(byte_io, file_ext.upper())
+
+    file_ext = file_ext.upper()
+    if file_ext == "JPG":
+        file_ext = "JPEG"
+    inverted_image.save(byte_io, file_ext)
+
     byte_io.seek(0)
 
     return StreamingResponse(byte_io, media_type=f"image/{file_ext}", headers={"Content-Disposition": f"attachment; filename=inverted_image.{file_ext}"})
