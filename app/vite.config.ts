@@ -9,7 +9,7 @@ export default defineConfig({
     // connect to a remote backend during web-only development
     proxy: {
       '/api': {
-        target: process.env.VITE_APP_API_URL,
+        target: process.env.VITE_API_URL,
         secure: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
