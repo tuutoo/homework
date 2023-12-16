@@ -16,9 +16,6 @@ RUN pnpm install
 # 复制源代码
 COPY . .
 
-# 构建应用
-RUN pnpm run build
-
 # 阶段2: 开发阶段
 FROM base AS dev
 
@@ -28,11 +25,15 @@ EXPOSE 5173
 # 设置开发模式
 CMD ["pnpm", "run", "dev"]
 
+FROM base as build
+# 构建应用
+RUN pnpm run build
+
 # 阶段3: 生产阶段
 FROM nginx:alpine AS prod
 
 # 从构建阶段复制构建产物到当前镜像
-COPY --from=base /usr/src/app/dist /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
 # 暴露生产端口
 EXPOSE 80
