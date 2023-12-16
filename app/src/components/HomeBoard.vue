@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 import { NCard, NButton, NSpace } from "naive-ui";
 import axios from "axios";
 
@@ -22,8 +22,14 @@ const cropper_target = ref<{
 } | null>(null);
 
 const clearPreviousResults = () => {
-  imgSrc.value = "";
-  imgReturn.value = "";
+  if (imgSrc.value) {
+    URL.revokeObjectURL(imgSrc.value);
+    imgSrc.value = "";
+  }
+  if (imgReturn.value) {
+    URL.revokeObjectURL(imgReturn.value);
+    imgReturn.value = "";
+  }
   infoText.value = "";
   if (fileInput.value) {
     fileInput.value.value = "";
@@ -71,6 +77,7 @@ const downloadSrcImage = () => {
   cropper_src.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data);
     aLink.click();
+    window.URL.revokeObjectURL(aLink.href); // 释放创建的URL
   });
 };
 
@@ -80,8 +87,13 @@ const downloadImage = () => {
   cropper_target.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data);
     aLink.click();
+    window.URL.revokeObjectURL(aLink.href); // 释放创建的URL
   });
 };
+
+onBeforeUnmount(() => {
+  clearPreviousResults(); // 组件卸载时清理资源
+});
 </script>
 
 <template>
