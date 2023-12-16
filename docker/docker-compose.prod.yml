@@ -28,6 +28,7 @@ services:
     build:
       context: ../nginx
       dockerfile: Dockerfile
+      target: prod
     ports:
       - 2121:8080
     depends_on:
