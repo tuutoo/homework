@@ -11,6 +11,9 @@ dependencies:
   axios:
     specifier: ^1.5.1
     version: registry.npmmirror.com/axios@1.5.1
+  remove:
+    specifier: ^0.1.5
+    version: registry.npmmirror.com/remove@0.1.5
   vue:
     specifier: ^3.3.4
     version: registry.npmmirror.com/vue@3.3.4
@@ -19,6 +22,9 @@ dependencies:
     version: registry.npmmirror.com/vue-cropper@1.1.1
 
 devDependencies:
+  '@vicons/material':
+    specifier: ^0.12.0
+    version: registry.npmmirror.com/@vicons/material@0.12.0
   '@vitejs/plugin-vue':
     specifier: ^4.2.3
     version: registry.npmmirror.com/@vitejs/plugin-vue@4.3.4(vite@4.4.9)(vue@3.3.4)
@@ -383,6 +389,12 @@ packages:
     name: '@types/node'
     version: 20.8.0
 
+  registry.npmmirror.com/@vicons/material@0.12.0:
+    resolution: {integrity: sha512-chv1CYAl8P32P3Ycwgd5+vw/OFNc2mtkKdb1Rw4T5IJmKy6GVDsoUKV3N2l208HATn7CCQphZtuPDdsm7K2kmA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vicons/material/-/material-0.12.0.tgz}
+    name: '@vicons/material'
+    version: 0.12.0
+    dev: true
+
   registry.npmmirror.com/@vitejs/plugin-vue@4.3.4(vite@4.4.9)(vue@3.3.4):
     resolution: {integrity: sha512-ciXNIHKPriERBisHFBvnTbfKa6r9SAesOYXeGDzgegcvy9Q4xdScSHAmKbNT0M3O0S9LKhIf5/G+UYG4NnnzYw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vitejs/plugin-vue/-/plugin-vue-4.3.4.tgz}
     id: registry.npmmirror.com/@vitejs/plugin-vue/4.3.4
@@ -587,6 +599,14 @@ packages:
       balanced-match: registry.npmmirror.com/balanced-match@1.0.2
     dev: true
 
+  registry.npmmirror.com/chainsaw@0.0.9:
+    resolution: {integrity: sha512-nG8PYH+/4xB+8zkV4G844EtfvZ5tTiLFoX3dZ4nhF4t3OCKIb9UvaFyNmeZO2zOSmRWzBoTD+napN6hiL+EgcA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/chainsaw/-/chainsaw-0.0.9.tgz}
+    name: chainsaw
+    version: 0.0.9
+    dependencies:
+      traverse: registry.npmmirror.com/traverse@0.3.9
+    dev: false
+
   registry.npmmirror.com/combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/combined-stream/-/combined-stream-1.0.8.tgz}
     name: combined-stream
@@ -725,6 +745,14 @@ packages:
     dev: true
     optional: true
 
+  registry.npmmirror.com/hashish@0.0.4:
+    resolution: {integrity: sha512-xyD4XgslstNAs72ENaoFvgMwtv8xhiDtC2AtzCG+8yF7W/Knxxm9BX+e2s25mm+HxMKh0rBmXVOEGF3zNImXvA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hashish/-/hashish-0.0.4.tgz}
+    name: hashish
+    version: 0.0.4
+    dependencies:
+      traverse: registry.npmmirror.com/traverse@0.6.7
+    dev: false
+
   registry.npmmirror.com/he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/he/-/he-1.2.0.tgz}
     name: he
@@ -862,6 +890,14 @@ packages:
     version: 0.14.0
     dev: true
 
+  registry.npmmirror.com/remove@0.1.5:
+    resolution: {integrity: sha512-AJMA9oWvJzdTjwIGwSQZsjGQiRx73YTmiOWmfCp1fpLa/D4n7jKcpoA+CZiVLJqKcEKUuh1Suq80c5wF+L/qVQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/remove/-/remove-0.1.5.tgz}
+    name: remove
+    version: 0.1.5
+    dependencies:
+      seq: registry.npmmirror.com/seq@0.3.5
+    dev: false
+
   registry.npmmirror.com/rollup@3.29.4:
     resolution: {integrity: sha512-oWzmBZwvYrU0iJHtDmhsm662rC15FRXmcjCk1xD771dFDx5jJ02ufAQQTn0etB2emNk4J9EZg/yWKpsn9BWGRw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/rollup/-/rollup-3.29.4.tgz}
     name: rollup
@@ -888,6 +924,15 @@ packages:
       lru-cache: registry.npmmirror.com/lru-cache@6.0.0
     dev: true
 
+  registry.npmmirror.com/seq@0.3.5:
+    resolution: {integrity: sha512-sisY2Ln1fj43KBkRtXkesnRHYNdswIkIibvNe/0UKm2GZxjMbqmccpiatoKr/k2qX5VKiLU8xm+tz/74LAho4g==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/seq/-/seq-0.3.5.tgz}
+    name: seq
+    version: 0.3.5
+    dependencies:
+      chainsaw: registry.npmmirror.com/chainsaw@0.0.9
+      hashish: registry.npmmirror.com/hashish@0.0.4
+    dev: false
+
   registry.npmmirror.com/source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz}
     name: source-map-js
@@ -899,6 +944,18 @@ packages:
     name: to-fast-properties
     version: 2.0.0
     engines: {node: '>=4'}
+
+  registry.npmmirror.com/traverse@0.3.9:
+    resolution: {integrity: sha512-iawgk0hLP3SxGKDfnDJf8wTz4p2qImnyihM5Hh/sGvQ3K37dPi/w8sRhdNIxYA1TwFwc5mDhIJq+O0RsvXBKdQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/traverse/-/traverse-0.3.9.tgz}
+    name: traverse
+    version: 0.3.9
+    dev: false
+
+  registry.npmmirror.com/traverse@0.6.7:
+    resolution: {integrity: sha512-/y956gpUo9ZNCb99YjxG7OaslxZWHfCHAUUfshwqOXmxUIvqLjVO581BT+gM59+QV9tFe6/CGG53tsA1Y7RSdg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/traverse/-/traverse-0.6.7.tgz}
+    name: traverse
+    version: 0.6.7
+    dev: false
 
   registry.npmmirror.com/treemate@0.3.11:
     resolution: {integrity: sha512-M8RGFoKtZ8dF+iwJfAJTOH/SM4KluKOKRJpjCMhI8bG3qB74zrFoArKZ62ll0Fr3mqkMJiQOmWYkdYgDeITYQg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/treemate/-/treemate-0.3.11.tgz}

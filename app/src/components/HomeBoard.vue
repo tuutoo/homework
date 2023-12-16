@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from "vue";
-import { NCard, NButton, NSpace } from "naive-ui";
+import { NCard, NButton, NSpace, NIcon } from "naive-ui";
 import axios from "axios";
-
 import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
+import { DownloadSharp as DownloadIcon, FileUploadSharp as UploadIcon, LocalPrintshopSharp as PrintIcon } from "@vicons/material";
 
 const apiUrl = import.meta.env.VITE_API_URL || "http://192.168.66.32:8000/api/invert/";
 
@@ -76,7 +76,8 @@ const fileChanged = (e: Event) => {
 
 const downloadSrcImage = () => {
   const aLink = document.createElement("a");
-  aLink.download = "原图像";
+  const fileNameWithoutExt = originalFileName.value.split(".").slice(0, -1).join(".");
+  aLink.download = `${fileNameWithoutExt}_cut.jpeg`;
   cropper_src.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data);
     aLink.click();
@@ -86,8 +87,8 @@ const downloadSrcImage = () => {
 
 const downloadImage = () => {
   const aLink = document.createElement("a");
-  const fileNameWithoutExt = originalFileName.value.split('.').slice(0, -1).join('.');
-  aLink.download = `${fileNameWithoutExt}_export.jpeg`;
+  const fileNameWithoutExt = originalFileName.value.split(".").slice(0, -1).join(".");
+  aLink.download = `${fileNameWithoutExt}_reversed.jpeg`;
   // // 获取当前时间并格式化为年月日时分秒
   // const now = new Date();
   // const timestamp = now.getFullYear().toString() +
@@ -105,6 +106,23 @@ const downloadImage = () => {
   });
 };
 
+const printImage = (imageType: string) => {
+  const target = imageType === "original" ? cropper_src : cropper_target;
+  target.value?.getCropBlob(async (data: Blob) => {
+    const imgSrc = window.URL.createObjectURL(data);
+    const img = new Image();
+    img.src = imgSrc;
+    img.onload = () => {
+      const windowPrint = window.open("", "_blank");
+      windowPrint?.document.write('<img src="' + img.src + '" style="width: 100%;">');
+      windowPrint?.document.close();
+      windowPrint?.focus();
+      windowPrint?.print();
+      window.URL.revokeObjectURL(imgSrc); // 释放创建的URL
+    };
+  });
+};
+
 onBeforeUnmount(() => {
   clearPreviousResults(); // 组件卸载时清理资源
 });
@@ -115,8 +133,24 @@ onBeforeUnmount(() => {
     <n-card title="请上传需要反色处理的图片">
       <n-space vertical>
         <n-space>
-          <n-button @click="clickInputFile">上传文件</n-button>
-          <n-button v-if="imgSrc" @click="downloadSrcImage">下载裁切图(原图)</n-button>
+          <n-button @click="clickInputFile">
+            <template #icon>
+              <n-icon>
+                <upload-icon />
+              </n-icon>
+            </template>
+            上传文件</n-button
+          >
+          <n-button v-if="imgSrc" @click="downloadSrcImage"><template #icon>
+              <n-icon>
+                <download-icon />
+              </n-icon>
+            </template>下载裁切图(原图)</n-button>
+          <n-button v-if="imgSrc" @click="printImage('original')"><template #icon>
+            <n-icon>
+              <print-icon />
+            </n-icon>
+          </template>打印裁切图(原图)</n-button>
         </n-space>
         <div>
           <input type="file" ref="fileInput" @change="fileChanged" hidden />
@@ -136,6 +170,18 @@ onBeforeUnmount(() => {
       </n-space>
       <div class="finalResult">
         <n-space vertical>
+          <n-space>
+            <n-button v-if="imgReturn" @click="downloadImage"><template #icon>
+              <n-icon>
+                <download-icon />
+              </n-icon>
+            </template>下载裁切图(反色)</n-button>
+            <n-button v-if="imgReturn" @click="printImage('target')"><template #icon>
+              <n-icon>
+                <print-icon />
+              </n-icon>
+            </template>打印裁切图(反色)</n-button>
+          </n-space>
           <div class="crop-container">
             <VueCropper
               ref="cropper_target"
@@ -145,7 +191,6 @@ onBeforeUnmount(() => {
               outputType="png"
             ></VueCropper>
           </div>
-          <n-button v-if="imgReturn" @click="downloadImage">下载裁切图(反色)</n-button>
         </n-space>
       </div>
     </n-card>
