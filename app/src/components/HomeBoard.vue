@@ -12,6 +12,7 @@ const imgSrc = ref("");
 const imgReturn = ref("");
 const infoText = ref("");
 const fileInput = ref<HTMLInputElement | null>(null);
+const originalFileName = ref("");
 
 const cropper_src = ref<{ getCropBlob: (callback: (data: Blob) => void) => void } | null>(
   null
@@ -64,6 +65,8 @@ const fileChanged = (e: Event) => {
   if (!file) {
     return;
   }
+
+  originalFileName.value = file.name; // 保存原始文件名
   clearPreviousResults();
   imgSrc.value = URL.createObjectURL(file);
   const formData = new FormData();
@@ -83,7 +86,18 @@ const downloadSrcImage = () => {
 
 const downloadImage = () => {
   const aLink = document.createElement("a");
-  aLink.download = "反色图像";
+  const fileNameWithoutExt = originalFileName.value.split('.').slice(0, -1).join('.');
+  aLink.download = `${fileNameWithoutExt}_export.jpeg`;
+  // // 获取当前时间并格式化为年月日时分秒
+  // const now = new Date();
+  // const timestamp = now.getFullYear().toString() +
+  //                   (now.getMonth() + 1).toString().padStart(2, '0') +
+  //                   now.getDate().toString().padStart(2, '0') + '_' +
+  //                   now.getHours().toString().padStart(2, '0') +
+  //                   now.getMinutes().toString().padStart(2, '0') +
+  //                   now.getSeconds().toString().padStart(2, '0');
+
+  // aLink.download = `${fileNameWithoutExt}_export_${timestamp}.jpeg`;
   cropper_target.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data);
     aLink.click();
