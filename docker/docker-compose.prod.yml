@@ -5,26 +5,23 @@ services:
     build:
       context: ../app
       dockerfile: Dockerfile
-    volumes:
-      - ../app:/usr/src/app
-      - /usr/src/app/node_modules
     ports:
-      - "5173:5173"
-    env_file:
-      - .env
+      - "5173:80"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+    restart: unless-stopped
+
   homework-api:
     container_name: homework_api
     build:
       context: ../api
       dockerfile: Dockerfile
-    volumes:
-      - ../api:/usr/src/app
     ports:
       - "8000:8000"
     environment:
-      - FLASK_ENV=development
+      - FLASK_ENV=production
+    restart: unless-stopped
+
   homework-proxy:
     container_name: homework_proxy
     build:
