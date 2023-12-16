@@ -20,7 +20,7 @@ COPY . .
 RUN pnpm run build
 
 # 阶段2: 开发阶段
-FROM base AS development
+FROM base AS dev
 
 # 暴露开发端口
 EXPOSE 5173
@@ -29,7 +29,7 @@ EXPOSE 5173
 CMD ["pnpm", "run", "dev"]
 
 # 阶段3: 生产阶段
-FROM nginx:alpine AS production
+FROM nginx:alpine AS prod
 
 # 从构建阶段复制构建产物到当前镜像
 COPY --from=base /usr/src/app/dist /usr/share/nginx/html
