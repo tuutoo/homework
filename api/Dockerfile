@@ -1,5 +1,5 @@
 # 使用官方 Python 镜像
-FROM python:3.9
+FROM python:3.9-alpine
 
 # 设置工作目录
 WORKDIR /usr/src/app
