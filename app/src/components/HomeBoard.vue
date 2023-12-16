@@ -6,7 +6,7 @@ import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
 import { DownloadSharp as DownloadIcon, FileUploadSharp as UploadIcon, LocalPrintshopSharp as PrintIcon } from "@vicons/material";
 
-const apiUrl = import.meta.env.VITE_API_URL || "http://192.168.66.32:8000/api/invert/";
+const apiUrl = import.meta.env.VITE_API_URL || "https://homework.sohot.app/api/invert/";
 
 const imgSrc = ref("");
 const imgReturn = ref("");
