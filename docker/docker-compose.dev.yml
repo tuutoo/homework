@@ -27,15 +27,3 @@ services:
       - "8000:8000"
     environment:
       - FLASK_ENV=development
-  homework-proxy:
-    container_name: homework_proxy
-    build:
-      context: ../nginx
-      dockerfile: Dockerfile
-      target: dev
-    ports:
-      - 2121:8080
-    depends_on:
-      - homework-api
-      - homework-app
-    restart: unless-stopped

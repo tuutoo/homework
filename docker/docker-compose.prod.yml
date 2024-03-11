@@ -22,16 +22,3 @@ services:
     environment:
       - FLASK_ENV=production
     restart: unless-stopped
-
-  homework-proxy:
-    container_name: homework_proxy
-    build:
-      context: ../nginx
-      dockerfile: Dockerfile
-      target: prod
-    ports:
-      - 2121:8080
-    depends_on:
-      - homework-api
-      - homework-app
-    restart: unless-stopped
