@@ -4,4 +4,4 @@ mangum
 Pillow
 numpy
 python-multipart
-ultralytics
+ultralytics=8.0.196
