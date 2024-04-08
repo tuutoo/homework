@@ -1,15 +1,14 @@
 from mangum import Mangum
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-
 from PIL import Image
 import numpy as np
 import io
-
 from ultralytics import YOLO
 import uuid
 import math
+from typing import Optional
 
 app = FastAPI()
 
@@ -21,11 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 假设你的YOLOv9模型加载方式
-# 请根据实际情况替换成适合你的模型的代码
 model = YOLO('blackboard_best.pt')
-
-# Display model information (optional)
 model.info()
 
 @app.get("/")
@@ -38,78 +33,75 @@ def read_item(item_id: int):
 
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
-    # 将上传的文件读取为字节
     image_bytes = await file.read()
-
-    # 使用PIL读取图片
     image = Image.open(io.BytesIO(image_bytes))
-
-    # # 确保图片是RGB格式
-    # if image.mode != 'RGB':
-    #     image = image.convert('RGB')
-
-    # 使用模型进行预测
     results = model.predict(image)
-
-    # 打印results的结构来查看
-    print(results[0].boxes)
-
-    # 将结果处理为可以序列化的格式
     predictions = format_predictions(results)
-
     return JSONResponse(content={"predictions": predictions})
 
-    # 根据results的实际结构进行处理...
 def format_predictions(results):
     predictions = []
-    # 假设results是一个列表，其中每个元素代表一张图片的预测结果
     for result in results:
-        # 访问每个结果的boxes属性
         boxes = result.boxes
-        # 检查是否有检测到的对象
         if boxes.data is not None and len(boxes.data) > 0:
-            for i in range(len(boxes.data)):
-                x1, y1, x2, y2, conf, cls = boxes.data[i]
-                predictions.append({
-                    "x": round(x1.item(), 1),  # 保留一位小数
-                    "y": round(y1.item(), 1),  # 保留一位小数
-                    "width": math.ceil((x2 - x1).item()),  # 向上取整
-                    "height": math.ceil((y2 - y1).item()),  # 向上取整
-                    "confidence": round(conf.item(), 3),  # 保留三位小数
-                    "class": result.names[int(cls.item())],  # 使用索引从names中获取类名
-                    "class_id": int(cls.item()),
-                    "detection_id": str(uuid.uuid4())
-                })
-    return predictions
+            sorted_boxes = sorted(boxes.data, key=lambda x: x[4], reverse=True)  # Sort by confidence in descending order
+            x1, y1, x2, y2, conf, cls = sorted_boxes[0]  # Only take the one with the highest confidence
+            predictions.append({
+                "x": round(x1.item(), 1),
+                "y": round(y1.item(), 1),
+                "width": math.ceil((x2 - x1).item()),
+                "height": math.ceil((y2 - y1).item()),
+                "confidence": round(conf.item(), 3),
+                "class": result.names[int(cls.item())],
+                "class_id": int(cls.item()),
+                "detection_id": str(uuid.uuid4())
+            })
+    # If predictions is empty, i.e., no results were detected, or if only the result with the highest confidence is requested
+    if predictions:
+        return predictions[0]  # Only return the one with the highest confidence
+    else:
+        return None  # If no results were detected, return None
 
 @app.post("/invert/")
-async def invert_image(file: UploadFile = File(...)):
-    file_ext = file.filename.split(".")[-1]  # 获取文件扩展名
+async def invert_image(file: UploadFile = File(...), ai: Optional[str] = Form(None)):
+    file_ext = file.filename.split(".")[-1]
     supported_formats = ["jpeg", "jpg", "png"]
+    ai_bool = ai.lower() == 'true' if ai else False  # Convert ai parameter to boolean
 
     if file_ext.lower() not in supported_formats:
-        return {"error": "Unsupported file format, only jpg and png are supportted."}
+        return {"error": "Unsupported file format, only jpg and png are supported."}
 
-    # 使用 PIL 打开图片
-    image = Image.open(io.BytesIO(await file.read()))
+    if ai_bool:  # If the ai parameter is true
+        # First, perform blackboard detection
+        image_bytes = await file.read()
+        image = Image.open(io.BytesIO(image_bytes))
+        results = model.predict(image)
+        prediction = format_predictions(results)  # Now expecting to get a dictionary, not a list of dictionaries
 
-    # 将图片转换为 NumPy 数组
-    image_array = np.array(image)
+        if prediction is not None and prediction["class"].lower() == "blackboard":
+            # Crop the blackboard area
+            x = prediction["x"]
+            y = prediction["y"]
+            width = prediction["width"]
+            height = prediction["height"]
+            blackboard_region = image.crop((x, y, x + width, y + height))
+        else:
+            # If no blackboard is found, use the entire image
+            blackboard_region = image
 
-    # 执行反色操作
+    else:
+        # If the ai parameter is false, use the entire image
+        image_bytes = await file.read()
+        blackboard_region = Image.open(io.BytesIO(image_bytes))
+
+    # Perform inversion on the selected area or the entire image
+    image_array = np.array(blackboard_region)
     inverted_image_array = 255 - image_array
-
-    # 将 NumPy 数组转回为 PIL 图片
     inverted_image = Image.fromarray(np.uint8(inverted_image_array))
 
-    # 保存到一个字节流中，以便可以直接返回
     byte_io = io.BytesIO()
-
-    file_ext = file_ext.upper()
-    if file_ext == "JPG":
-        file_ext = "JPEG"
+    file_ext = "JPEG" if file_ext.lower() == "jpg" else file_ext.upper()
     inverted_image.save(byte_io, file_ext)
-
     byte_io.seek(0)
 
     return StreamingResponse(byte_io, media_type=f"image/{file_ext}", headers={"Content-Disposition": f"attachment; filename=inverted_image.{file_ext}"})
