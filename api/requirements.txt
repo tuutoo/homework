@@ -4,3 +4,4 @@ mangum
 Pillow
 numpy
 python-multipart
+ultralytics
