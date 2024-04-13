@@ -109,18 +109,24 @@ const downloadSrcImage = () => {
   cropper_src.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data)
     aLink.click()
-    window.URL.revokeObjectURL(aLink.href) // 释放创建的URL
   })
 }
 
-const downloadImage = () => {
+const downloadBlobImage = () => {
+  const aLink = document.createElement('a') // 创建一个a元素
+  const fileNameWithoutExt = originalFileName.value.split('.').slice(0, -1).join('.') // 获取文件名，去掉扩展名
+  aLink.download = `${fileNameWithoutExt}_reversed.png` // 设置下载的文件名
+  aLink.href = imgReturn.value // 将a元素的href属性设置为图片的URL
+  aLink.click() // 模拟点击，触发下载
+}
+
+const downloadCropImage = () => {
   const aLink = document.createElement('a')
   const fileNameWithoutExt = originalFileName.value.split('.').slice(0, -1).join('.')
   aLink.download = `${fileNameWithoutExt}_reversed.png`
   cropper_target.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data)
     aLink.click()
-    window.URL.revokeObjectURL(aLink.href) // 释放创建的URL
   })
 }
 
@@ -136,7 +142,6 @@ const printImage = (imageType: string) => {
       windowPrint?.document.close()
       windowPrint?.focus()
       windowPrint?.print()
-      window.URL.revokeObjectURL(imgSrc) // 释放创建的URL
     }
   })
 }
@@ -194,7 +199,14 @@ onBeforeUnmount(() => {
       <div class="finalResult">
         <n-space vertical>
           <n-space>
-            <n-button v-if="imgReturn" @click="downloadImage"
+            <n-button v-if="imgReturn" @click="downloadBlobImage"
+              ><template #icon>
+                <n-icon>
+                  <download-icon />
+                </n-icon> </template
+              >下载高清图(反色)</n-button
+            >
+            <n-button v-if="imgReturn" @click="downloadCropImage"
               ><template #icon>
                 <n-icon>
                   <download-icon />
