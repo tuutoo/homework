@@ -26,6 +26,7 @@ const originalFileName = ref('')
 const ai_cutting = ref(true)
 const tarImgWidth = ref(0)
 const tarImgHeight = ref(0)
+const cropWidth = ref(0)
 
 const loadImageSize = () => {
   const img = new Image() // 创建一个Image对象
@@ -33,7 +34,8 @@ const loadImageSize = () => {
     // 图片加载完成时触发
     tarImgWidth.value = img.width // 更新宽度
     tarImgHeight.value = img.height // 更新高度
-    // console.log(`Image Size: ${img.width} x ${img.height}`) // 打印图片尺寸
+    console.log(`Image Size: ${img.width} x ${img.height}`) // 打印图片尺寸
+    cropWidth.value = Math.floor((img.width / img.height) * 400)
   }
   img.src = imgReturn.value // 设置图片的src为imgReturn的值，开始加载图片
 }
@@ -212,8 +214,8 @@ onBeforeUnmount(() => {
               ref="cropper_target"
               :img="imgReturn"
               autoCrop
-              :autoCropWidth="tarImgWidth"
-              :autoCropHeight="tarImgHeight"
+              :autoCropWidth="cropWidth"
+              autoCropHeight="400"
               centerBox
               outputType="png"
             ></VueCropper>
