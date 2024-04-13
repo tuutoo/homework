@@ -40,9 +40,9 @@ const loadImageSize = () => {
   img.src = imgReturn.value // 设置图片的src为imgReturn的值，开始加载图片
 }
 
-const cropper_src = ref<{ getCropBlob: (callback: (data: Blob) => void) => void } | null>(
-  null
-)
+const cropper_src = ref<{
+  getCropBlob: (callback: (data: Blob) => void) => void
+} | null>(null)
 
 const cropper_target = ref<{
   getCropBlob: (callback: (data: Blob) => void) => void
