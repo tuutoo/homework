@@ -77,7 +77,7 @@ const fetchRequest = async (formData: FormData) => {
         'Access-Control-Allow-Origin': '*',
       },
     })
-    const blob = new Blob([data], { type: 'image/jpeg' })
+    const blob = new Blob([data], { type: 'image/png' })
     imgReturn.value = URL.createObjectURL(blob)
     infoText.value = '文件处理成功'
     loadImageSize() // 加载图片并获取尺寸
@@ -105,7 +105,7 @@ const fileChanged = (e: Event) => {
 const downloadSrcImage = () => {
   const aLink = document.createElement('a')
   const fileNameWithoutExt = originalFileName.value.split('.').slice(0, -1).join('.')
-  aLink.download = `${fileNameWithoutExt}_cut.jpeg`
+  aLink.download = `${fileNameWithoutExt}_cut.png`
   cropper_src.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data)
     aLink.click()
@@ -116,7 +116,7 @@ const downloadSrcImage = () => {
 const downloadImage = () => {
   const aLink = document.createElement('a')
   const fileNameWithoutExt = originalFileName.value.split('.').slice(0, -1).join('.')
-  aLink.download = `${fileNameWithoutExt}_reversed.jpeg`
+  aLink.download = `${fileNameWithoutExt}_reversed.png`
   cropper_target.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data)
     aLink.click()
@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="container">
-    <n-card v-if="!errorMessage" title="请上传需要反色处理的图片">
+    <n-card v-if="!errorMessage" :bordered="false" title="请上传需要反色处理的图片">
       <n-space vertical>
         <n-space>
           <n-button @click="clickInputFile">
@@ -235,7 +235,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  width: 100%;
+  width: 85%;
 }
 
 .crop-container {
