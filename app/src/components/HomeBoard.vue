@@ -10,7 +10,13 @@ import {
   LocalPrintshopSharp as PrintIcon,
 } from '@vicons/material'
 
-const apiUrl = import.meta.env.VITE_API_URL || 'https://homework.sohot.app/api/invert/'
+const apiUrl = import.meta.env.VITE_API_URL
+console.log(apiUrl)
+const errorMessage = ref('')
+
+if (!apiUrl) {
+  errorMessage.value = 'API URL 未设置。请在 .env 文件中设置 VITE_API_URL。'
+}
 
 const imgSrc = ref('')
 const imgReturn = ref('')
@@ -109,16 +115,6 @@ const downloadImage = () => {
   const aLink = document.createElement('a')
   const fileNameWithoutExt = originalFileName.value.split('.').slice(0, -1).join('.')
   aLink.download = `${fileNameWithoutExt}_reversed.jpeg`
-  // // 获取当前时间并格式化为年月日时分秒
-  // const now = new Date();
-  // const timestamp = now.getFullYear().toString() +
-  //                   (now.getMonth() + 1).toString().padStart(2, '0') +
-  //                   now.getDate().toString().padStart(2, '0') + '_' +
-  //                   now.getHours().toString().padStart(2, '0') +
-  //                   now.getMinutes().toString().padStart(2, '0') +
-  //                   now.getSeconds().toString().padStart(2, '0');
-
-  // aLink.download = `${fileNameWithoutExt}_export_${timestamp}.jpeg`;
   cropper_target.value?.getCropBlob((data: Blob) => {
     aLink.href = window.URL.createObjectURL(data)
     aLink.click()
@@ -150,7 +146,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="container">
-    <n-card title="请上传需要反色处理的图片">
+    <n-card v-if="!errorMessage" title="请上传需要反色处理的图片">
       <n-space vertical>
         <n-space>
           <n-button @click="clickInputFile">
@@ -225,6 +221,9 @@ onBeforeUnmount(() => {
         </n-space>
       </div>
     </n-card>
+    <div v-else class="error-message">
+      <p>{{ errorMessage }}</p>
+    </div>
   </div>
 </template>
 
