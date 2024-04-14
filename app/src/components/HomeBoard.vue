@@ -131,19 +131,37 @@ const downloadCropImage = () => {
 }
 
 const printImage = (imageType: string) => {
-  const target = imageType === 'original' ? cropper_src : cropper_target
-  target.value?.getCropBlob(async (data: Blob) => {
-    const imgSrc = window.URL.createObjectURL(data)
-    const img = new Image()
-    img.src = imgSrc
-    img.onload = () => {
-      const windowPrint = window.open('', '_blank')
-      windowPrint?.document.write('<img src="' + img.src + '" style="width: 100%;">')
-      windowPrint?.document.close()
-      windowPrint?.focus()
-      windowPrint?.print()
-    }
-  })
+  if (imageType === 'original') {
+    cropper_src.value?.getCropBlob(async (data: Blob) => {
+      printFromBlob(data)
+    })
+  } else if (imageType === 'target') {
+    cropper_target.value?.getCropBlob(async (data: Blob) => {
+      printFromBlob(data)
+    })
+  } else if (imageType === 'src') {
+    printFromURL(imgSrc.value)
+  } else if (imageType === 'return') {
+    printFromURL(imgReturn.value)
+  }
+}
+
+function printFromBlob(blob: Blob) {
+  const imgURL = window.URL.createObjectURL(blob)
+  printFromURL(imgURL)
+}
+
+function printFromURL(imgURL: string) {
+  const img = new Image()
+  img.src = imgURL
+
+  img.onload = () => {
+    const windowPrint = window.open('', '_blank')
+    windowPrint?.document.write('<img src="' + img.src + '" style="width: 100%;">')
+    windowPrint?.document.close()
+    windowPrint?.focus()
+    windowPrint?.print()
+  }
 }
 
 onBeforeUnmount(() => {
@@ -171,6 +189,13 @@ onBeforeUnmount(() => {
                 <download-icon />
               </n-icon> </template
             >下载裁切图(原图)</n-button
+          >
+          <n-button v-if="imgSrc" @click="printImage('src')"
+            ><template #icon>
+              <n-icon>
+                <print-icon />
+              </n-icon> </template
+            >打印全图(原图)</n-button
           >
           <n-button v-if="imgSrc" @click="printImage('original')"
             ><template #icon>
@@ -204,7 +229,14 @@ onBeforeUnmount(() => {
                 <n-icon>
                   <download-icon />
                 </n-icon> </template
-              >下载高清图(反色)</n-button
+              >下载全图(反色)</n-button
+            >
+            <n-button v-if="imgReturn" @click="printImage('return')"
+              ><template #icon>
+                <n-icon>
+                  <print-icon />
+                </n-icon> </template
+              >打印全图(反色)</n-button
             >
             <n-button v-if="imgReturn" @click="downloadCropImage"
               ><template #icon>
