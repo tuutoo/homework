@@ -1,5 +1,5 @@
 # 使用官方 Python 镜像
-FROM ultralytics/ultralytics:8.1.45-python
+FROM ultralytics/ultralytics:8.2.0-python
 
 # 设置工作目录
 WORKDIR /usr/src/app
