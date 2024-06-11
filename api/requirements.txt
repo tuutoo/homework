@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-mangum
+mangum==0.17.0
 Pillow
 numpy
 python-multipart
