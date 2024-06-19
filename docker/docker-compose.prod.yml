@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  homework-app:
+  app:
     container_name: homework_app
     build:
       context: ../app
@@ -12,7 +12,7 @@ services:
       - NODE_ENV=production
     restart: unless-stopped
 
-  homework-api:
+  api:
     container_name: homework_api
     build:
       context: ../api
