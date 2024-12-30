@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 import { NCard, NButton, NSpace, NIcon, NCheckbox } from 'naive-ui'
-import axios from 'axios'
+// import axios from 'axios'
 import 'vue-cropper/dist/index.css'
 import { VueCropper } from 'vue-cropper'
 import {
@@ -10,13 +10,15 @@ import {
   LocalPrintshopSharp as PrintIcon,
 } from '@vicons/material'
 
-const apiUrl = import.meta.env.VITE_API_URL
-console.log(apiUrl)
+import { invert } from '@/api/invert'
+
+// const apiUrl = import.meta.env.VITE_API_URL
+// console.log(apiUrl)
 const errorMessage = ref('')
 
-if (!apiUrl) {
-  errorMessage.value = 'API URL 未设置。请在 .env 文件中设置 VITE_API_URL。'
-}
+// if (!apiUrl) {
+//   errorMessage.value = 'API URL 未设置。请在 .env 文件中设置 VITE_API_URL。'
+// }
 
 const imgSrc = ref('')
 const imgReturn = ref('')
@@ -70,13 +72,7 @@ const clickInputFile = () => {
 const fetchRequest = async (formData: FormData) => {
   infoText.value = '正在处理文件中...'
   try {
-    const { data } = await axios.post(apiUrl, formData, {
-      responseType: 'arraybuffer',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
+    const { data } = await invert(formData)
     const blob = new Blob([data], { type: 'image/png' })
     imgReturn.value = URL.createObjectURL(blob)
     infoText.value = '文件处理成功'
