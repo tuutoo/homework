@@ -5,7 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8686:80"  # 仅暴露前端的接口
+      - "5173:80"
+      - "8000:8000"
     environment:
       - NODE_ENV=production
       - FLASK_ENV=production
