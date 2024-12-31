@@ -1,0 +1,12 @@
+services:
+  app:
+    container_name: homework_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8686:80"  # 仅暴露前端的接口
+    environment:
+      - NODE_ENV=production
+      - FLASK_ENV=production
+    restart: unless-stopped
